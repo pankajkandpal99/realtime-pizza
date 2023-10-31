@@ -28,13 +28,71 @@ section.hero {
   background: $secondary;
 }
 
+.btn-primary {
+  background: $primary;
+  transition: $smooth;
+  &:hover {
+    background: $primary-hover;
+  }
+}
+
 .add-to-cart {
   border: 2px solid $primary;
   color: $primary;
   transition: $smooth;
   &:hover {
     background: $primary;
-    border-color : $pure;
+    border-color: $pure;
     color: $pure;
   }
 }
+
+// cart.ejs
+section.cart {
+  background: $secondary;
+  .amount {
+    color: $primary;
+  }
+
+  .btn-primary {
+    background: $primary;
+    transition: $smooth;
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+section.login,
+section.register {
+  box-sizing: border-box;
+  background: $secondary;
+  height: 80vh;
+  .btn-primary {
+    background: $primary;
+    transition: $smooth;
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+  a {
+    color: $primary;
+    &:hover {
+      color: $primary-hover;
+    }
+  }
+  
+  input {
+    border : 1px solid $secondary;
+    &:focus {
+      outline: none;
+      border: 1px solid $primary;
+    }
+  }
+
+  .cart {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(116, 116, 116);
+  }
+}
+

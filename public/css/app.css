@@ -26,6 +26,14 @@ section.hero {
   background: #F8F8F8;
 }
 
+.btn-primary {
+  background: #fe5f1e;
+  transition: all 0.2s ease-in-out;
+}
+.btn-primary:hover {
+  background: #b23301;
+}
+
 .add-to-cart {
   border: 2px solid #fe5f1e;
   color: #fe5f1e;
@@ -35,4 +43,56 @@ section.hero {
   background: #fe5f1e;
   border-color: #fff;
   color: #fff;
+}
+
+section.cart {
+  background: #F8F8F8;
+}
+section.cart .amount {
+  color: #fe5f1e;
+}
+section.cart .btn-primary {
+  background: #fe5f1e;
+  transition: all 0.2s ease-in-out;
+}
+section.cart .btn-primary:hover {
+  background: #b23301;
+}
+
+section.login,
+section.register {
+  box-sizing: border-box;
+  background: #F8F8F8;
+  height: 80vh;
+}
+section.login .btn-primary,
+section.register .btn-primary {
+  background: #fe5f1e;
+  transition: all 0.2s ease-in-out;
+}
+section.login .btn-primary:hover,
+section.register .btn-primary:hover {
+  background: #b23301;
+}
+section.login a,
+section.register a {
+  color: #fe5f1e;
+}
+section.login a:hover,
+section.register a:hover {
+  color: #b23301;
+}
+section.login input,
+section.register input {
+  border: 1px solid #F8F8F8;
+}
+section.login input:focus,
+section.register input:focus {
+  outline: none;
+  border: 1px solid #fe5f1e;
+}
+section.login .cart,
+section.register .cart {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgb(116, 116, 116);
 }
