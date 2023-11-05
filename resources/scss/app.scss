@@ -1,4 +1,5 @@
-@import "./variables";
+@import "./_variables";
+@import "toastr/build/toastr.min.css";
 
 body {
   font-family: "Lato", sans-serif;
@@ -81,9 +82,9 @@ section.register {
       color: $primary-hover;
     }
   }
-  
+
   input {
-    border : 1px solid $secondary;
+    border: 1px solid $secondary;
     &:focus {
       outline: none;
       border: 1px solid $primary;
@@ -96,3 +97,27 @@ section.register {
   }
 }
 
+@keyframes custom-fade-in {          // this is a in-built class of toastr
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Success Message Styles */
+.toast.toast-success {
+  height: 50px !important;
+  background-color: rgb(40, 205, 40) !important; /* Green color */
+  border-radius: 10px !important;
+  animation: custom-fade-in 0.2s !important;
+}
+
+/* Error Message Styles */
+.toast.toast-error {
+  height: 50px !important;
+  background-color: rgb(177, 9, 9) !important; /* Red color */
+  border-radius: 10px !important;
+  animation: custom-fade-in 0.2s !important;
+}
