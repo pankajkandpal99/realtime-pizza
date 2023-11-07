@@ -8,6 +8,8 @@ const expressLayout = require("express-ejs-layouts");
 const session = require("express-session");
 const flash = require("express-flash");
 const MongoDBStore = require("connect-mongo");
+const passport = require("passport");
+
 const PORT = process.env.PORT || 3000;
 
 // Database connection
@@ -21,7 +23,6 @@ mongoose
     console.log("Error connecting to MongoDB", err);
   });
 
-// Session config works as a middleware..
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
@@ -35,13 +36,23 @@ app.use(
     }),
   })
 );
-
 app.use(flash());
+
+// Passport config ---
+app.use(passport.initialize());
+app.use(passport.session());
+const passportInit = require("./app/config/passport.config");
+passportInit(passport);
+
+// Session config works as a middleware..
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Global middleware ... means har request per kaam karega...
 app.use((req, res, next) => {
-  res.locals.session = req.session;
+  res.locals.session = req.session;                      // req.session ek object hai jo user ki session data ko represent karta hai, jo Express.js session management system ke dwaara maintain hoti hai. res.locals.session session data ko res.locals object mein "session" naam ke variable mein store kar deta hai. Isse session data views ke liye available ho jata hai jab aap kisi response ko render karte hain. Yani ki, aap apne views mein session se related data ko access kar sakte hain jab aap views ko render karte hain.
+  res.locals.user = req.user;                            // req.user ek object hai jo usually authenticate kiye gaye user ko represent karta hai. Yeh aksar user authentication wale applications mein istemal hota hai, jisse user ki information ko track kiya ja sake. res.locals.user user object ko res.locals object mein "user" naam ke variable mein store kar deta hai. Session data ki tarah, yeh user object bhi views ke liye available ho jata hai jab aap kisi response ko render karte hain. Isse aap apne HTML templates ya views mein user-specific information ko display kar sakte hain. layout.ejs me user ka use locally kiya gaya hai..
   next();
 });
 
@@ -56,5 +67,3 @@ require("./routes/web")(app);
 app.listen(PORT, () => {
   console.log(`server is listening on PORT ${PORT}.`);
 });
-
-// 1:42:00

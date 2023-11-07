@@ -29,8 +29,18 @@
         <ul class="flex items-center">
           <li class="ml-6"><a href="#">Menu</a></li>
           <li class="ml-6"><a href="#">Offers</a></li>
-          <li class="ml-6"><a href="/register">Register</a></li>
-          <li class="ml-6"><a href="/login">Login</a></li>
+
+          <% if(user) { %>                             <!-- agar user logged in hai to main page per hame logout render ho jayega.. -->
+            <li class="ml-6">
+              <form id="logout" method="POST" action="/logout">
+                <a onclick="document.getElementById('logout').submit()" href="#"> Logout </a>
+              </form>
+            </li>
+          <% } else { %>
+            <li class="ml-6"><a href="/register">Register</a></li>                     <!-- agar user logged in nahi hai hai to main page per hame Register aur login render ho jayega.. -->
+            <li class="ml-6"><a href="/login">Login</a></li>
+          <% } %>
+
           <li class="ml-6">
             <a
               href="/cart"

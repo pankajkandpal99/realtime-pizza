@@ -9,7 +9,10 @@
     </div>
 
     <div class="cart mt-8 sm:mx-auto sm:w-3/4 sm:max-w-sm bg-white px-6 py-6">
-      <form class="space-y-6" action="#" method="POST">
+      <form class="space-y-6" method="POST" action="/register">
+        <% if(messages.error) { %>
+        <span class="text-red-600 text-sm"> <%= messages.error %> </span>
+        <% } %>
         <div>
           <label
             for="name"
@@ -22,7 +25,7 @@
               name="name"
               type="text"
               placeholder="enter your name"
-              required
+              value="<%= messages.name %>"
               class="block w-full rounded-md border-1 py-2 px-2 text-gray-800 shadow-sm placeholder:text-gray-400 focus:ring-0 focus:ring-orange-700 sm:text-sm sm:leading-6"
             />
           </div>
@@ -40,9 +43,8 @@
               name="email"
               type="email"
               placeholder="enter your email"
-              autocomplete="email"
-              required
-              class="block w-full rounded-md border-1 py-2 px-2 text-gray-800 shadow-sm placeholder:text-gray-400 focus:ring-0 focus:ring-orange-700 sm:text-sm sm:leading-6"
+              value="<%= messages.email %>"
+              class="block w-full rounded-md border-1 py-2 px-2 text-lg-gray-800 shadow-sm placeholder:text-gray-400 focus:ring-0 focus:ring-orange-700 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -69,8 +71,7 @@
               type="password"
               placeholder="enter your password"
               autocomplete="current-password"
-              required
-              class="block w-full rounded-md border-0 py-2 px-2 text-gray-800 shadow-sm focus:ring-0 focus:ring-orange-700 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-2 px-2 text-gray-800 text-md shadow-sm focus:ring-0 focus:ring-orange-700 placeholder:text-gray-400 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
