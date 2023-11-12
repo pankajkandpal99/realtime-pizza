@@ -46,6 +46,17 @@ section.hero {
   color: #fff;
 }
 
+.cart-button {
+  border: 2px solid #fe5f1e;
+  color: #fe5f1e;
+  transition: all 0.2s ease-in-out;
+}
+.cart-button:hover {
+  background: #fe5f1e;
+  border-color: #fff;
+  color: #fff;
+}
+
 section.cart {
   background: #F8F8F8;
 }
@@ -120,4 +131,8 @@ section.register .cart {
   background-color: rgb(177, 9, 9) !important; /* Red color */
   border-radius: 10px !important;
   animation: custom-fade-in 0.2s !important;
+}
+
+a.link {
+  color: #fe5f1e;
 }

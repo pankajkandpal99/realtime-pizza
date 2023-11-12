@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 function authController() {
+  const _getRedirectUrl = (req) => {          // iss function me ye check kiya gaya hai ki user ke role ke anusar hi use sahi jagah redirect karna hai...
+    return req.user.role === 'ADMIN' ? '/admin/orders/' : '/customer/orders';
+  }
+
   return {
     login(req, res) {
       res.render("auth/login");
@@ -34,9 +38,9 @@ function authController() {
             return next(err);
           }
 
-          return res.redirect('/');
+          return res.redirect(_getRedirectUrl(req));        
         });
-      })(req, res, next);                          // iska line ka jo matlab hai wo ye hai ki passport.authenticate ek function return karta hai jisme ki 3 parameters hain.
+      })(req, res, next);                          // iss line ka matlab ye hai ki passport.authenticate ek function return karta hai jisme ki 3 parameters hain.
     },
 
     register(req, res) {

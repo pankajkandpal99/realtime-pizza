@@ -1,5 +1,6 @@
 import axios from "axios";
 import toastr from "toastr";
+import initAdmin from './admin';
 
 let addToCart = document.querySelectorAll(".add-to-cart");
 let cartcounter = document.querySelector("#cart-counter");
@@ -19,7 +20,7 @@ const updateCart = (pizza) => {
       };
 
       toastr.success("Item added to your cart.");
-    })                                // Server ki taraf se bheje gaye JSON response ko client-side code (app.js) means isi file me axios ke then block me access kiya ja sakta hai. Yani, jab server se response aata hai, tab then block me res variable ke andar yeh response store ho jata hai.
+    }) // Server ki taraf se bheje gaye JSON response ko client-side code (app.js) means isi file me axios ke then block me access kiya ja sakta hai. Yani, jab server se response aata hai, tab then block me res variable ke andar yeh response store ho jata hai.
     .catch((err) => {
       toastr.options = {
         positionClass: "toast-top-right",
@@ -39,3 +40,14 @@ addToCart.forEach((btn) => {
     updateCart(pizza);
   });
 });
+
+// order place hone ke baad green color wale success msg ko 2 second baad remove kr dena...
+const alertMsg = document.querySelector("#success-alert");
+if (alertMsg) {
+  setTimeout(() => {
+    alertMsg.remove();
+  }, 2000);
+}
+
+// for Admin only....
+initAdmin();

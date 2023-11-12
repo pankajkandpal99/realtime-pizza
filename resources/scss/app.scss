@@ -48,6 +48,17 @@ section.hero {
   }
 }
 
+.cart-button {
+  border: 2px solid $primary;
+  color: $primary;
+  transition: $smooth;
+  &:hover {
+    background: $primary;
+    border-color: $pure;
+    color: $pure;
+  }
+}
+
 // cart.ejs
 section.cart {
   background: $secondary;
@@ -97,7 +108,8 @@ section.register {
   }
 }
 
-@keyframes custom-fade-in {          // this is a in-built class of toastr
+@keyframes custom-fade-in {
+  // this is a in-built class of toastr
   0% {
     transform: translateX(100%);
   }
@@ -120,4 +132,8 @@ section.register {
   background-color: rgb(177, 9, 9) !important; /* Red color */
   border-radius: 10px !important;
   animation: custom-fade-in 0.2s !important;
+}
+
+a.link {
+  color: $primary;
 }

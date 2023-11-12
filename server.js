@@ -4,7 +4,6 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const expressLayout = require("express-ejs-layouts");
-// const initRoutes = require('./routes/web');
 const session = require("express-session");
 const flash = require("express-flash");
 const MongoDBStore = require("connect-mongo");
