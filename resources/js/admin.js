@@ -1,8 +1,11 @@
 import moment from "moment/moment";
+import toastr from "toastr";
 // import axios from "axios";
 
-async function initAdmin() {
+async function initAdmin(socket) {
   const orderTableBody = document.querySelector("#orderTableBody");
+  let orders = [];
+  let markup;
   // console.log("Before fetch");
   try {
     const response = await fetch("/admin/orders", {
@@ -15,10 +18,10 @@ async function initAdmin() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const orders = await response.json();
-    const markup = generateMarkup(orders);
+    orders = await response.json();
+    markup = generateMarkup(orders);
     orderTableBody.innerHTML = markup;
-    console.log("orders:", orders);
+    // console.log("orders:", orders);
   } catch (err) {
     console.error(err.message);
   }
@@ -29,7 +32,7 @@ async function initAdmin() {
       .map((menuItem) => {
         return `<p>${menuItem.item.name} - ${menuItem.qty} pcs </p>`; // menueItem means items array ke andar available objectId. aur uss objetcId ke andar ke item aur fir uske andar name ko access karna...
       })
-      .join(""); // jo sare paragraph aayenge unko space se join kar dena...
+      .join(""); 
   }
 
   function generateMarkup(orders) {
@@ -81,6 +84,21 @@ async function initAdmin() {
       })
       .join("");
   }
+
+  socket.on('orderPlaced', (order) => {
+    toastr.options = {
+      positionClass: "toast-top-right",
+      timeOut: 1000, // Disappear after 1 seconds
+      progressBar: false,
+      closeButton: true, // Show close button
+    };
+  
+    toastr.success("New Order.");
+
+    orders.unshift(order)                         // admin panel me sabse upper orders ko add karna...
+    orderTableBody.innerHTML = '';
+    orderTableBody.innerHTML = generateMarkup(orders);
+  });
 }
 
 export default initAdmin;
