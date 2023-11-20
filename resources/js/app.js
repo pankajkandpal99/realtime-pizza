@@ -1,7 +1,8 @@
 import axios from "axios";
 import toastr from "toastr";
+import moment from "moment";
 import initAdmin from "./admin";
-import moment from 'moment';
+import { initStripe } from "./stripe";
 
 let addToCart = document.querySelectorAll(".add-to-cart");
 let cartcounter = document.querySelector("#cart-counter");
@@ -50,7 +51,6 @@ if (alertMsg) {
   }, 2000);
 }
 
-
 // change order status.... file -- singleOrder.ejs....
 let statuses = document.querySelectorAll(".status_line");
 // console.log(statuses);
@@ -59,14 +59,14 @@ let hiddenInput = document.querySelector("#hidden-input");
 let order = hiddenInput ? hiddenInput.value : null;
 order = JSON.parse(order);
 // console.log(order);
-let time = document.createElement('small');                  // HTML me <small> tag text ko chhota ya kam noticeable size mein represent karne ke liye use hota hai. Ye tag primarily stylistic purposes ke liye istemal hota hai aur content ko visually distinct banane ke liye kiya jata hai. 
+let time = document.createElement("small"); // HTML me <small> tag text ko chhota ya kam noticeable size mein represent karne ke liye use hota hai. Ye tag primarily stylistic purposes ke liye istemal hota hai aur content ko visually distinct banane ke liye kiya jata hai.
 
 // We need to render updated status....
 function updatedStatus(order) {
   statuses.forEach((status) => {
-    status.classList.remove('step-completed');
-    status.classList.remove('current');
-  })
+    status.classList.remove("step-completed");
+    status.classList.remove("current");
+  });
 
   let stepCompleted = true;
   statuses.forEach((status) => {
@@ -77,7 +77,7 @@ function updatedStatus(order) {
 
     if (dataProp === order.status) {
       stepCompleted = false;
-      time.innerText = moment(order.updatedAt).format('hh:mm A');
+      time.innerText = moment(order.updatedAt).format("hh:mm A");
       status.appendChild(time);
 
       if (status.nextElementSibling) {
@@ -88,24 +88,26 @@ function updatedStatus(order) {
 }
 
 updatedStatus(order);
+initStripe()
 
 
 // Socket...
 let socket = io();
- initAdmin(socket);
 // join
-if(order){
-  socket.emit('join', `order_${order._id}`);            // upper hum order ko fetch kar rahe hain hiddenInput se ....
+if (order) {
+  socket.emit("join", `order_${order._id}`); // upper hum order ko fetch kar rahe hain hiddenInput se ....
 }
 
 let adminAreaPath = window.location.pathname;
-// console.log(adminArea);
-if(adminAreaPath.includes('admin')) {
-  socket.emit('join', 'adminRoom');
+// console.log(adminAreaPath);
+if (adminAreaPath.includes("admin")) {
+  initAdmin(socket);
+  socket.emit("join", "adminRoom");
 }
 
-socket.on('orderUpdated', (data) => {               // orderUpdated event jo humne emit(trigger) kiya tha server.js file me use yaha per listen kliya ja ra hai ...
-  const updatedOrder = { ...order }
+socket.on("orderUpdated", (data) => {
+  // orderUpdated event jo humne emit(trigger) kiya tha server.js file me use yaha per listen kliya ja ra hai ...
+  const updatedOrder = { ...order };
   updatedOrder.updatedAt = moment().format();
   updatedOrder.status = data.status;
   // console.log(data);
@@ -118,4 +120,4 @@ socket.on('orderUpdated', (data) => {               // orderUpdated event jo hum
   };
 
   toastr.success("Order updated.");
-})
+});

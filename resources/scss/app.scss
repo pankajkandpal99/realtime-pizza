@@ -1,5 +1,8 @@
 @import "./_variables";
 @import "toastr/build/toastr.min.css";
+// @tailwind base;
+// @tailwind components;
+// @tailwind utilities;
 
 body {
   font-family: "Lato", sans-serif;
@@ -121,7 +124,7 @@ section.register {
 /* Success Message Styles */
 .toast.toast-success {
   height: 50px !important;
-  background-color: rgb(40, 205, 40) !important; /* Green color */
+  background-color: rgb(43, 193, 43) !important; /* Green color */
   border-radius: 10px !important;
   animation: custom-fade-in 0.2s !important;
 }
@@ -203,7 +206,7 @@ section.status {
 
 // line
 .status-box ul li:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -6px;
@@ -214,7 +217,7 @@ section.status {
 }
 // last dot...
 .status-box ul li:nth-child(5) span:after {
-  box-shadow:0 20px 1px 20px $secondary;
+  box-shadow: 0 20px 1px 20px $secondary;
 }
 // line
 .status-box ul li.step-completed:before {
@@ -224,21 +227,67 @@ section.status {
 .status-box ul li.step-completed span:after {
   background: $gray;
 }
-// text 
+// text
 .status-box ul li.step-completed span {
   color: $gray;
 }
 
 // current status ...
 .status-box ul li.current span {
-  color : $primary;
+  color: $primary;
 }
 .status-box ul li.current span:after {
-  color : $gray;
+  color: $gray;
 }
 
 .status-box ul li small {
   float: right;
   font-size: 14px;
-  margin-top: 8px; 
+  margin-top: 8px;
+}
+
+// Media Query...
+@media (max-width: 1080px) {
+  .container {
+    max-width: 90% !important;
+  }
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .status-box ul li span:before {
+    font-size: 34px;
+  }
+}
+
+.StripeElement {
+  box-sizing: border-box;
+  width: 50%;
+  margin-left: auto;
+  height: 40px;
+  padding: 10px 12px;
+
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: white;
+
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
 }

@@ -1,4 +1,5 @@
 const Order = require("../../../models/order.model");
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const moment = require("moment");
 
 function orderController() {
@@ -6,13 +7,19 @@ function orderController() {
   return {
     async store(req, res) {
       try {
-        let { phone, address } = req.body;
-        //   console.log(phone, address);
+        let {
+          phone,
+          address,
+          stripeToken,
+          payment_type: paymentType,
+        } = req.body;
+
+        // console.log(req.body);
         if (!phone || !address) {
-          req.flash("error", "All fields are required!");
-          return res.redirect("/cart");
+          return res.status(422).json({ message: "All fields are required!" });
         }
 
+        // Order creation
         const order = new Order({
           customerId: req.user._id, // logged in user ko passport library req ke upper user available karwa deti hai jisse hum uss user ki _id ko nikal sakte hain...
           items: req.session.cart.items,
@@ -20,23 +27,66 @@ function orderController() {
           address: address,
         });
 
+        // Order save in database...
         await order.save();
         const placedOrder = await Order.populate(order, { path: "customerId" });
-        if(placedOrder){
-          
-          req.flash("success", "Order placed successfully.");
-          delete req.session.cart;                  // order place hone ke baad cart empty ho jayega...
+        if (placedOrder) {
+          // console.log(placedOrder);
 
-          // Emit
-          const eventEmitter = req.app.get("eventEmitter");
-          eventEmitter.emit("orderPlaced", placedOrder); // iske baad ise server.js per listen kiya ja sakta hai ...
+          // Stripe payment....
+          if (paymentType === "card") {
+            // console.log(`Payment type:  ${paymentType}`);
 
-          return res.redirect("customer/orders");
+            const source = await stripe.sources.create({
+              type: 'card',
+              token: stripeToken
+            });
+
+            try {
+              await stripe.paymentIntents.create({        // As per latest RBI guidelines, Stripe has switched from Charges API to Payment Intent API.
+                amount: req.session.cart.totalPrice * 100, // rupees ko paise me convert kiya gaya hai ...
+                source: source.id,                          // Jab aap stripe.sources.create ka istemal karte hain, aapke pass ek response aata hai, jisme source ka sara data hota hai, aur isme id field mein ek unique identifier hota hai. Aapko chahiye ki aap iss unique identifier ko stripe.paymentIntents.create method ke source parameter mein provide karein, taaki Stripe sahi source ko identify kar sake aur transaction complete ho sake.
+                currency: "inr",
+                description: `Pizza order: ${placedOrder._id}`,
+              });
+
+              // console.log(paymentIntent);
+              // console.log(placedOrder);
+              placedOrder.paymentStatus = true; // ye palcedOrder ke andar jo paymentStatus hai wo model me already defined hai jise ki yaha payment milne ke baad true kiya ja ra hai ki payment mil gaya hai ise true kar do...
+              placedOrder.paymentType = paymentType;
+              const ord = await placedOrder.save();
+              // console.log(ord);
+              if (!ord) {
+                console.log("ord not saved: ", err);
+              }
+              // Emit
+              const eventEmitter = req.app.get("eventEmitter");
+              eventEmitter.emit("orderPlaced", ord); // iske baad ise server.js per listen kiya ja sakta hai ...
+              delete req.session.cart; // order place hone ke baad cart ke sare items delete ho jayenge aur cart empty ho jayega...
+              return res.json({
+                message: "Payment Successfull, Order placed successfully.",
+              });
+
+            } catch (err) {
+              // payment error handling....
+              console.log(
+                "Error Occuring while fetching orders placing time. Orders placed, but Payment failed : ",
+                err
+              );
+              delete req.session.cart; // order place ho gayi hai aur payment me issue hai...
+              return res.json({
+                message:
+                  "OrderPlaced but Payment failed, You can pay at delivery time.",
+              });
+            }
+          } else {           // cod ke liye...
+            delete req.session.cart;    
+            return res.json({ message: "Order placed successfully." });
+          }
         }
       } catch (err) {
         console.log("Error occured while you are saving order : ", err);
-        req.flash("Something went wrong!");
-        return res.redirect("/cart");
+        return res.status(500).json({ message: "Something went wrong!" });
       }
     },
 

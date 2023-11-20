@@ -1,3 +1,4 @@
+// ye file order.ejs file ki javascript file hai...
 import moment from "moment/moment";
 import toastr from "toastr";
 // import axios from "axios";
@@ -78,6 +79,9 @@ async function initAdmin(socket) {
           </td>
           <td class="border px-4 py-2">
             ${moment(order.createdAt).format("hh:mm A")}
+          </td>
+          <td class="border px-4 py-2">
+            ${ order.paymentStatus ? 'Paid' : 'Not Paid' }
           </td>
         </tr>
       `;

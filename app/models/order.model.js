@@ -26,10 +26,14 @@ const orderSchema = new Schema(
       required: true,
     },
 
-    paymentType: {
-      // ye order karne ke baad payment karne ke liye hai .....
+    paymentType: {                              // ye order karne ke baad payment karne ke liye hai .....
       type: String,
       default: "COD",
+    },
+
+    paymentStatus: {
+      type: Boolean,
+      default: false,
     },
 
     status: {

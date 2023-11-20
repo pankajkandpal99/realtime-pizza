@@ -1,11 +1,11 @@
 <section class="cart py-16">
-  <div class="order container mx-auto w-1/2">
+  <% if(session.cart){ %>
+  <div class="order container mx-auto xl:w-1/2">
     <div class="flex items-center border-b border-gray-300 pb-4">
       <img src="/img/cart-black.png" alt="" />
       <h1 class="font-bold ml-4 text-2xl">Order Summary</h1>
     </div>
 
-    <% if(session.cart){ %>
     <div class="pizza-list">
       <!-- server ke sessions me data session ke andar cart ke items me stored hai, jo ki ek object hai but usme iterate karne ke liye hame use Array me convert karna hoga.. -->
       <% for(let pizza of Object.values(session.cart.items)) { %>
@@ -35,31 +35,55 @@
       <hr />
 
       <!-- <% //if(user) { %> -->
-        <div>
-          <form action="/orders" method="post" class="mt-12">
-            <input
-              class="border border-gray-400 p-2 w-1/2 mb-4"
-              type="text"
-              name="phone"
-              placeholder="enter your phone number"
-            />
-            <input
-              class="border border-gray-400 p-2 w-1/2"
-              type="text"
-              name="address"
-              placeholder="enter your address"
-            />
-
-            <div>
-              <button
-                type="submit"
-                class="btn-primary px-6 py-2 rounded-full text-white font-bold mt-6"
+      <div>
+        <form action="/orders" method="post" class="mt-12" id="payment-form">
+          <div class="relative w-1/2 ml-auto mb-4">
+            <select id="payment_type" name="payment_type"
+              class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="cod">Cash on delivery</option>
+              <option value="card">Pay with card</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+            >
+              <svg
+                class="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
               >
-                Order Now
-              </button>
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                />
+              </svg>
             </div>
-          </form>
-        </div>
+          </div>
+
+          <input
+            class="border border-gray-400 rounded p-2 w-1/2 mb-4"
+            type="text"
+            name="phone"
+            placeholder="enter your phone number"
+          />
+          <input
+            class="border border-gray-400 rounded p-2 w-1/2"
+            type="text"
+            name="address"
+            placeholder="enter your address"
+          />
+
+          <div class="mt-4">
+            <div id="card-element"> </div>
+
+            <button
+              type="submit"
+              class="btn-primary px-6 py-2 rounded-full text-white font-bold mt-6"
+            >
+              Order Now
+            </button>
+          </div>
+        </form>
+      </div>
       <!-- <% // } else { %>
         <a
           href="/login"
@@ -72,7 +96,7 @@
   <% } else { %>
   <div class="empty-cart py-16">
     <div class="container mx-auto text-center">
-      <h1 class="text-3xl font-bold mb-2">Cart Empty</h1>
+      <h1 class="text-3xl font-bold mb-2">Cart Empty😥</h1>
       <p class="text-gray-500 text-lg mb-12">
         You probably haven't ordered a pizza yet. <br />
         To order a pizza, go to the main page.

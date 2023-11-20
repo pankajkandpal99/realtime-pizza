@@ -13,7 +13,7 @@ const Emitter = require("events"); // events is the built-in module in Node.js..
 const PORT = process.env.PORT || 3000;
 
 // Database connection
-const url = "mongodb://127.0.0.1:27017/realtime-pizza";
+const url = process.env.MONGO_CONNECTION_URL;
 mongoose
   .connect(url)
   .then(() => {
@@ -69,6 +69,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 require("./routes/web")(app);
 
+app.use((req, res) => {
+  res.status(404).render("error/ErrorPage.ejs", { layout: 'error/errorLayout'});
+});
+
 const server = app.listen(PORT, () => {
   console.log(`server is listening on PORT ${PORT}.`);
 });
@@ -79,18 +83,20 @@ io.on("connection", (socket) => {
   const socketId = socket.id;
   // console.log(`User connected with Socket ID: ${socketId}`);     // Socket ID ek unique identifier hai jo ek socket connection ko represent karta hai. Socket ID generate hone ka matlab hai ki connection establish ho jana.  Jab bhi koi client server se connect hota hai, connection event trigger hota hai aur us connection ke liye ek unique socket ID generate hota hai. Is ID ko use karke server client ke sath communication karta hai.
 
-  socket.on("join", (orderId) => {                 // Server-side code mein socket.on('join', ...) ka istemal ek event handler ke liye kiya gaya hai, jo ki client side se trigger ho ra hai /resources/app.js file me socket.emit function event ko trigger karne ke liye hota hai jo ki server-side per handler ho ra hai ...
+  socket.on("join", (orderId) => {
+    // Server-side code mein socket.on('join', ...) ka istemal ek event handler ke liye kiya gaya hai, jo ki client side se trigger ho ra hai /resources/app.js file me socket.emit function event ko trigger karne ke liye hota hai jo ki server-side per handler ho ra hai ...
     // console.log(orderId);
     socket.join(orderId);
   });
 });
 
-eventEmitter.on("orderUpdated", (data) => {             // 'on' method ka matlab hota hai ki event ko listen karna... on method ka istemal event ko listen karne ke liye hota hai. Jab aap kisi event ke liye on method ka istemal karte hain, to aap ek event listener register karte hain jo us event ko sunega (listen) aur us event ke occurrence par specific action lega.
-  io.to(`order_${data.id}`).emit('orderUpdated', data);            // isme id ko hum adminStatusController se bhej rahe hain... io.to(order_${data.id}).emit('orderUpdated', data); se yeh bataya ja raha hai ki specific ek room (ya channel) ko suna ja raha hai aur uss room mein connected sabhi clients ko orderUpdated event ke sath associated data bheja ja raha hai. Yahan, io socket.io instance ko represent karta hai, to(order_${data.id}) specific room (order_${data.id}) ko target karta hai, aur .emit('orderUpdated', data) specific room ke sabhi clients ko orderUpdated event ke sath associated data bhejta hai.
+eventEmitter.on("orderUpdated", (data) => {
+  // 'on' method ka matlab hota hai ki event ko listen karna... on method ka istemal event ko listen karne ke liye hota hai. Jab aap kisi event ke liye on method ka istemal karte hain, to aap ek event listener register karte hain jo us event ko sunega (listen) aur us event ke occurrence par specific action lega.
+  io.to(`order_${data.id}`).emit("orderUpdated", data); // isme id ko hum adminStatusController se bhej rahe hain... io.to(order_${data.id}).emit('orderUpdated', data); se yeh bataya ja raha hai ki specific ek room (ya channel) ko suna ja raha hai aur uss room mein connected sabhi clients ko orderUpdated event ke sath associated data bheja ja raha hai. Yahan, io socket.io instance ko represent karta hai, to(order_${data.id}) specific room (order_${data.id}) ko target karta hai, aur .emit('orderUpdated', data) specific room ke sabhi clients ko orderUpdated event ke sath associated data bhejta hai.
 });
 
-eventEmitter.on('orderPlaced', (data) => {
-  io.to('adminRoom').emit('orderPlaced', data);
+eventEmitter.on("orderPlaced", (data) => {
+  io.to("adminRoom").emit("orderPlaced", data);
 });
 
 /*

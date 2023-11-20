@@ -120,7 +120,7 @@ section.register .cart {
 /* Success Message Styles */
 .toast.toast-success {
   height: 50px !important;
-  background-color: rgb(40, 205, 40) !important; /* Green color */
+  background-color: rgb(43, 193, 43) !important; /* Green color */
   border-radius: 10px !important;
   animation: custom-fade-in 0.2s !important;
 }
@@ -242,4 +242,44 @@ section.status {
   float: right;
   font-size: 14px;
   margin-top: 8px;
+}
+
+@media (max-width: 1080px) {
+  .container {
+    max-width: 90% !important;
+  }
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 768px) {
+  .status-box ul li span:before {
+    font-size: 34px;
+  }
+}
+.StripeElement {
+  box-sizing: border-box;
+  width: 50%;
+  margin-left: auto;
+  height: 40px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
 }

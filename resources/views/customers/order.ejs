@@ -30,7 +30,8 @@
         </tr>
       </thead>
       <tbody>
-        <% if(orders.length) { %> <% orders.forEach((order) => { %>
+        <% if(orders.length) { %> 
+        <% orders.forEach((order) => { %>
         <tr>
           <td class="border px-4 py-2">
             <a href="/customer/order/<%= order._id %>" class="link"> <%= order._id %> </a>
