@@ -99,6 +99,7 @@ eventEmitter.on("orderPlaced", (data) => {
   io.to("adminRoom").emit("orderPlaced", data);
 });
 
+
 /*
 eventEmitter.on("orderUpdated", (data) => {...});: Yeh line code ka mtlb hai ki "orderUpdated" event ko handle karne ke liye ek event listener register kiya gaya hai. Jab bhi "orderUpdated" event emit hoga, is listener ka callback function invoke hoga, jisme data parameter ke zariye event ke sath associated data ko receive kiya jaayega.
 
