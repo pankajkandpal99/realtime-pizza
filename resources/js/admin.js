@@ -1,4 +1,4 @@
-// ye file order.ejs file ki javascript file hai...
+// This is the javascript file of our client-side....
 import moment from "moment/moment";
 import toastr from "toastr";
 // import axios from "axios";
@@ -99,7 +99,7 @@ async function initAdmin(socket) {
   
     toastr.success("New Order.");
 
-    orders.unshift(order)                         // admin panel me sabse upper orders ko add karna...
+    orders.unshift(order)                         // admin panel me orders ko top per add karna...
     orderTableBody.innerHTML = '';
     orderTableBody.innerHTML = generateMarkup(orders);
   });

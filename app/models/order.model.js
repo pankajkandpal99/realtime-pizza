@@ -4,14 +4,12 @@ const Schema = mongoose.Schema;
 const orderSchema = new Schema(
   {
     customerId: {
-      // kon sa user order kar ra hai uski bhi _id compulsary rahegi...
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
     items: {
-      // user jo items ko order kar raha hai... ye items key hum session se lenge jo humne cart ke andar items store kiye the...
       type: Object,
       required: true,
     },
@@ -26,7 +24,7 @@ const orderSchema = new Schema(
       required: true,
     },
 
-    paymentType: {                              // ye order karne ke baad payment karne ke liye hai .....
+    paymentType: {                              // This line is for specially doing payment after ordered pizzas..
       type: String,
       default: "COD",
     },

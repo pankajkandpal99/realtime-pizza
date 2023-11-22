@@ -8,17 +8,18 @@ function cartController() {
       //  For the first time creating cart and adding basic object structure..
       if (!req.session.cart) {
         req.session.cart = {
-          items: {},                         // iss items objetc me multiple item store honge jitna bhi user add karega client side se...
+          items: {},                         
           totalQty: 0,
           totalPrice: 0,
         };
       }
 
       let cart = req.session.cart;
+      
       // check if item doesn't exist in cart.
       if (!cart.items[req.body._id]) {
         cart.items[req.body._id] = {
-          item: req.body,                     // client side se add butto click karne per server ko jo update req bheji gayi usme pizza bheja gaya hai jo pizza ki poori detail contain karta hai aur ise handle home.ejs file kr rahi hai...
+          item: req.body,                     
           qty: 1,
         };
         cart.totalQty = cart.totalQty + 1;

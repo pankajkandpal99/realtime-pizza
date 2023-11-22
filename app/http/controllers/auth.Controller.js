@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 function authController() {
-  const _getRedirectUrl = (req) => {          // iss function me ye check kiya gaya hai ki user ke role ke anusar hi use sahi jagah redirect karna hai...
+  const _getRedirectUrl = (req) => {         // private function...
     return req.user.role === 'ADMIN' ? '/admin/orders/' : '/customer/orders';
   }
 
@@ -21,13 +21,13 @@ function authController() {
         return res.redirect("/login");
       }
 
-      passport.authenticate("local", (err, user, info) => {            // isme jo second parameter callback function hai wo passport.config.js me done method se aane wale response se hi execute hoga...
+      passport.authenticate("local", (err, user, info) => {           
         if (err) {
           req.flash("error", info.message);
           return next(err);
         }
 
-        if (!user) {                     // user ke nahi hone ka matlab hai ki ya to email exist nahi karti hai sessions me ya fir wrong password hai....in dono hi cases me passport error through karega...
+        if (!user) {                    
           req.flash("error", info.message);
           return res.redirect("/login");
         }
@@ -40,7 +40,7 @@ function authController() {
 
           return res.redirect(_getRedirectUrl(req));        
         });
-      })(req, res, next);                          // iss line ka matlab ye hai ki passport.authenticate ek function return karta hai jisme ki 3 parameters hain.
+      })(req, res, next);                          
     },
 
     register(req, res) {

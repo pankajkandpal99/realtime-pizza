@@ -50,8 +50,8 @@ export class CardWidget {
     // this.stripe
     //   .createToken(this.cardElement)
     //   .then((result) => {
-    //     // console.log(result);                                                     // ye ek token provide karega...jo ki token object ke andar id field me hoga...
-    //     formObject.stripeToken = result.token.id;                                  // formObject ke andar ek stripeToken naame ke key me stripe server dwara bheja gaya token backend server ko send kiya ja ra hai ...
+    //     // console.log(result);                                                     
+    //     formObject.stripeToken = result.token.id;                                  
     //     placeOrder(formObject);
     //   })
     //   .catch((err) => {

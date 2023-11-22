@@ -21,7 +21,7 @@ function orderController() {
 
         // Order creation
         const order = new Order({
-          customerId: req.user._id, // logged in user ko passport library req ke upper user available karwa deti hai jisse hum uss user ki _id ko nikal sakte hain...
+          customerId: req.user._id,            // logged in user ko passport library req ke upper user available karwa deti hai jisse hum uss user ki _id ko nikal sakte hain...
           items: req.session.cart.items,
           phone: phone,
           address: address,
@@ -43,16 +43,16 @@ function orderController() {
             });
 
             try {
-              await stripe.paymentIntents.create({        // As per latest RBI guidelines, Stripe has switched from Charges API to Payment Intent API.
-                amount: req.session.cart.totalPrice * 100, // rupees ko paise me convert kiya gaya hai ...
-                source: source.id,                          // Jab aap stripe.sources.create ka istemal karte hain, aapke pass ek response aata hai, jisme source ka sara data hota hai, aur isme id field mein ek unique identifier hota hai. Aapko chahiye ki aap iss unique identifier ko stripe.paymentIntents.create method ke source parameter mein provide karein, taaki Stripe sahi source ko identify kar sake aur transaction complete ho sake.
+              await stripe.paymentIntents.create({              // As per latest RBI guidelines, Stripe has switched from Charges API to Payment Intent API.
+                amount: req.session.cart.totalPrice * 100,      // rupees ko paise me convert kiya gaya hai ...
+                source: source.id,                          
                 currency: "inr",
                 description: `Pizza order: ${placedOrder._id}`,
               });
 
               // console.log(paymentIntent);
               // console.log(placedOrder);
-              placedOrder.paymentStatus = true; // ye palcedOrder ke andar jo paymentStatus hai wo model me already defined hai jise ki yaha payment milne ke baad true kiya ja ra hai ki payment mil gaya hai ise true kar do...
+              placedOrder.paymentStatus = true; 
               placedOrder.paymentType = paymentType;
               const ord = await placedOrder.save();
               // console.log(ord);
@@ -73,13 +73,13 @@ function orderController() {
                 "Error Occuring while fetching orders placing time. Orders placed, but Payment failed : ",
                 err
               );
-              delete req.session.cart; // order place ho gayi hai aur payment me issue hai...
+              delete req.session.cart;      
               return res.json({
                 message:
                   "OrderPlaced but Payment failed, You can pay at delivery time.",
               });
             }
-          } else {           // cod ke liye...
+          } else {           // for cod...
             delete req.session.cart;    
             return res.json({ message: "Order placed successfully." });
           }
@@ -93,13 +93,13 @@ function orderController() {
     async index(req, res) {
       const orders = await Order.find({ customerId: req.user._id }, null, {
         sort: { createdAt: -1 },
-      }); // jo user loggedIn hoga usi ke order dikhaye jaynege...aur date ke anusar sort kiye jayenge... aur humne timing ke anusar unhe sort bhi kiya hai jisse order descending order me save honge...
+      });       // jo user loggedIn hoga usi ke order dikhaye jaynege...aur date ke anusar sort kiye jayenge... aur humne timing ke anusar unhe sort bhi kiya hai jisse order descending order me save honge...
       // console.log(orders);
 
       res.header(
         "Cache-Control",
         "no-cache, private, no-store, must-revalidate, max-state=0, post-check=0, pre-check=0"
-      ); // Yeh headers generally dynamic content ke liye use hote hain jise har baar fresh data chahiye, aur caching ko avoid karna chahiye. Isse ensure hota hai ki har request pe fresh data server se fetch hota hai. dynamic content, jaise ki user-specific data, har baar fresh hona chahiye. Agar aapne kuch order kiya hai aur aap apne orders dekh rahe hain, toh aapko har baar latest orders dikhne chahiye, na ki cache mein stored orders. Cache-Control headers browser ko batati hain ki kaise caching karna chahiye. Upar diye gaye headers no-cache, private, no-store, must-revalidate wagerah yehi batate hain ki browser ko fresh content har baar server se lena chahiye aur cache ko ignore karna chahiye.
+      );                      
       res.render("customers/order.ejs", { orders, moment }); // isme moment field time ke liye hai...
     },
 
@@ -108,7 +108,6 @@ function orderController() {
       const order = await Order.findById(orderId);
       // Authorized user...
       if (req.user._id.toString() === order.customerId.toString()) {
-        // only usi user ka hame order tracking dekhni hai jo loggedIn hai. kyuki database me available document ki id(_id) ek object ke roop me available hoti hai aur customerId bhi ek object ke roop me hi available hai to aise me hum dono objects ko aapas me compare nahi kar sakte hain... isliye pehle hame unhe string me convert karna hoga fir compare karke check kar sakte hain ki kon sa user loggedIn hai...
         return res.render("customers/singleOrder.ejs", { order });
       }
 
